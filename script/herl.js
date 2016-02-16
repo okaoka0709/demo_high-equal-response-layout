@@ -44,24 +44,24 @@ HerlNode.prototype.herl = function (opt){
 		$items.push(new Item($li[i]));
 	}
 
-	var aLine = 0,
-		start = 0; //計算一行開始的項目
+	var _totalWidth = 0,
+		_firstItem = 0; //計算一行開始的項目
 
 	for( var i = 0; i < $li_len; i++ ){ //分配行
 
 		var $obj = $items[i],
 			$obj_w = $obj.width;
 
-		aLine += $obj_w;
+		_totalWidth += $obj_w;
 
 		$obj.clearHeight();
 
-		if( aLine > $env_w ) { //檢測寬度是否在一行內，若大於一行寬度，則安排至下一行
+		if( _totalWidth > $env_w ) { //檢測寬度是否在一行內，若大於一行寬度，則安排至下一行
 
 			var $last_obj = $items[i - 1], //每行的最後一個
-				_prop = $env_w / ( aLine - $obj_w );
+				_prop = $env_w / ( _totalWidth - $obj_w );
 
-			for( var j = start; j < i; j++ ) {
+			for( var j = _firstItem; j < i; j++ ) {
 				var $obj = $items[j];
 
 				$obj.reSize(_prop);
@@ -69,9 +69,9 @@ HerlNode.prototype.herl = function (opt){
 
 			$last_obj.recoveryHeight(); //撐起最後高度
 
-			start = i;
+			_firstItem = i;
 
-			aLine = $obj_w;
+			_totalWidth = $obj_w;
 		}
 	}
 
